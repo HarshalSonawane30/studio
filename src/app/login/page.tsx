@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth, useFirestore } from '@/firebase';
 import Logo from '@/components/logo';
 import { Rocket } from 'lucide-react';
+import { trackEvent } from '@/lib/analytics';
 
 const GoogleIcon = () => (
     <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
@@ -31,7 +32,7 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!auth) {
+    if (!auth || !firestore) {
         toast({
             variant: 'destructive',
             title: 'Login Failed',
@@ -42,6 +43,10 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      
+      // Track successful login event
+      trackEvent(firestore, auth, 'user_login', { method: 'email' });
+
       toast({
         title: 'Login Successful',
         description: "Welcome back!",
@@ -73,7 +78,6 @@ export default function LoginPage() {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      // Check if user document exists, if not, create it
       const userRef = doc(firestore, 'users', user.uid);
       const userDoc = await getDoc(userRef);
 
@@ -83,7 +87,7 @@ export default function LoginPage() {
             email: user.email,
             displayName: user.displayName,
             profilePictureUrl: user.photoURL,
-            role: 'learner', // Default role
+            role: 'learner',
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
             bio: '',
@@ -91,6 +95,9 @@ export default function LoginPage() {
             interests: [],
         });
       }
+      
+      // Track successful login event
+      trackEvent(firestore, auth, 'user_login', { method: 'google' });
 
       toast({
         title: 'Login Successful',
