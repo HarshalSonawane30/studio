@@ -4,11 +4,12 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { doc, setDoc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/firebase';
+import { useAuth, useFirestore } from '@/firebase';
 import Logo from '@/components/logo';
 import { Rocket } from 'lucide-react';
 
@@ -26,10 +27,11 @@ export default function SignupPage() {
   const router = useRouter();
   const { toast } = useToast();
   const auth = useAuth();
+  const firestore = useFirestore();
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!auth) {
+    if (!auth || !firestore) {
         toast({
             variant: 'destructive',
             title: 'Signup Failed',
@@ -40,9 +42,25 @@ export default function SignupPage() {
     setLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      if (userCredential.user) {
-        await updateProfile(userCredential.user, {
+      const user = userCredential.user;
+
+      if (user) {
+        await updateProfile(user, {
           displayName: name,
+        });
+
+        // Create user document in Firestore
+        const userRef = doc(firestore, 'users', user.uid);
+        await setDoc(userRef, {
+            username: name.toLowerCase().replace(/\s/g, '') || user.email?.split('@')[0] || `user${Date.now()}`,
+            email: user.email,
+            displayName: name,
+            role: 'learner', // Default role
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+            bio: '',
+            skills: [],
+            interests: [],
         });
       }
       toast({
@@ -62,7 +80,7 @@ export default function SignupPage() {
   };
 
   const handleGoogleSignIn = async () => {
-    if (!auth) {
+    if (!auth || !firestore) {
       toast({
         variant: 'destructive',
         title: 'Signup Failed',
@@ -73,7 +91,28 @@ export default function SignupPage() {
     setLoading(true);
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      
+      // Check if user document exists, if not, create it
+      const userRef = doc(firestore, 'users', user.uid);
+      const userDoc = await getDoc(userRef);
+
+      if (!userDoc.exists()) {
+         await setDoc(userRef, {
+            username: user.displayName?.toLowerCase().replace(/\s/g, '') || user.email?.split('@')[0] || `user${Date.now()}`,
+            email: user.email,
+            displayName: user.displayName,
+            profilePictureUrl: user.photoURL,
+            role: 'learner', // Default role
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+            bio: '',
+            skills: [],
+            interests: [],
+        });
+      }
+
       toast({
         title: 'Signup Successful',
         description: 'Welcome!',

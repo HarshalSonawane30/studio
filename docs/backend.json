@@ -16,7 +16,9 @@
         "bio": { "type": "string" },
         "reputationScore": { "type": "number" },
         "isDeleted": { "type": "boolean", "default": false },
-        "lastLoginAt": { "type": "string", "format": "date-time" }
+        "lastLoginAt": { "type": "string", "format": "date-time" },
+        "skills": { "type": "array", "items": { "type": "string" }, "description": "Skills the user possesses." },
+        "interests": { "type": "array", "items": { "type": "string" }, "description": "User's interests." }
       },
       "required": ["username", "email", "role", "displayName", "createdAt", "updatedAt"]
     },
@@ -236,5 +238,3 @@
     "/users/{userId}/unreadCounts/{conversationId}": { "schema": { "$ref": "#/entities/UnreadMessageCount" }, "description": "Tracks unread messages for a user in a conversation." }
   }
 }
-
-    

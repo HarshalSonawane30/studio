@@ -1,6 +1,6 @@
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth, Auth } from 'firebase/auth';
-import { getFirestore, Firestore } from 'firebase/firestore';
+import { getFirestore, Firestore, serverTimestamp } from 'firebase/firestore';
 import { firebaseConfig } from './config';
 import { useCollection } from './firestore/use-collection';
 import { useDoc } from './firestore/use-doc';
@@ -41,4 +41,5 @@ export {
   useFirebaseApp,
   useFirestore,
   useAuth,
+  serverTimestamp,
 };
