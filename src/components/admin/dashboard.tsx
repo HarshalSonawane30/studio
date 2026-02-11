@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { BarChart, Users, FileText } from 'lucide-react';
+import { BarChart, Users, FileText, ClipboardList } from 'lucide-react';
 import Link from 'next/link';
 
 const adminWidgets = [
@@ -17,6 +17,12 @@ const adminWidgets = [
     description: 'View and manage platform users.',
     icon: <Users />,
     href: '/admin/users',
+  },
+  {
+    title: 'Skills & Assessments',
+    description: 'Add or edit skills and assessments.',
+    icon: <ClipboardList />,
+    href: '/admin/skills',
   },
   {
     title: 'Content Moderation',
