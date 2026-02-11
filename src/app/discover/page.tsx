@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { users, skills as allSkills, interests as allInterests } from '@/lib/data';
 import type { User } from '@/lib/data';
-import { Search, SlidersHorizontal, UserPlus } from 'lucide-react';
+import { Search, UserPlus } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -45,21 +45,21 @@ export default function DiscoverPage() {
             />
           </div>
           <div className="flex flex-1 gap-4 md:flex-initial">
-             <Select value={skillFilter} onValueChange={setSkillFilter}>
+             <Select value={skillFilter} onValueChange={(value) => setSkillFilter(value === 'all' ? '' : value)}>
               <SelectTrigger className="w-full md:w-[180px]">
                 <SelectValue placeholder="Filter by skill" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Skills</SelectItem>
+                <SelectItem value="all">All Skills</SelectItem>
                 {allSkills.map(skill => <SelectItem key={skill} value={skill}>{skill}</SelectItem>)}
               </SelectContent>
             </Select>
-            <Select value={interestFilter} onValueChange={setInterestFilter}>
+            <Select value={interestFilter} onValueChange={(value) => setInterestFilter(value === 'all' ? '' : value)}>
               <SelectTrigger className="w-full md:w-[180px]">
                 <SelectValue placeholder="Filter by interest" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Interests</SelectItem>
+                <SelectItem value="all">All Interests</SelectItem>
                 {allInterests.map(interest => <SelectItem key={interest} value={interest}>{interest}</SelectItem>)}
               </SelectContent>
             </Select>
