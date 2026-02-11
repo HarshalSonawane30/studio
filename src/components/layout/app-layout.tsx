@@ -14,6 +14,7 @@ import {
   SidebarInset,
 } from '@/components/ui/sidebar';
 import {
+  Home,
   LayoutDashboard,
   MessageSquare,
   Search,
@@ -27,9 +28,12 @@ import { useUser } from '@/firebase';
 import { Toaster } from "@/components/ui/toaster";
 
 const navItems = [
-  { href: '/', icon: LayoutDashboard, label: 'Dashboard' },
+  // Social Zone
+  { href: '/', icon: Home, label: 'Home' },
   { href: '/discover', icon: Search, label: 'Discover' },
   { href: '/matches', icon: Users, label: 'Matches' },
+  // Workspace Zone
+  { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/chat', icon: MessageSquare, label: 'Chat' },
   { href: '/assessments', icon: FileCheck, label: 'Assessments' },
   { href: '/profile', icon: UserIcon, label: 'Profile' },

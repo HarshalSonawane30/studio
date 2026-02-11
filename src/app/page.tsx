@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Heart, MessageCircle, Share2, MoreHorizontal, Image as ImageIcon } from "lucide-react";
@@ -100,24 +100,10 @@ const CreatePost = () => {
     );
 }
 
-export default function DashboardPage() {
+export default function HomePage() {
   return (
-    <div className="p-4 md:p-6 grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
-        <aside className="hidden lg:block lg:col-span-1">
-             <Card>
-                <CardHeader>
-                    <CardTitle className="font-headline">Welcome, {users[0].name}!</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-muted-foreground">Expand your network and showcase your skills.</p>
-                     <Button asChild className="mt-4 w-full">
-                        <Link href="/profile">View Profile</Link>
-                    </Button>
-                </CardContent>
-            </Card>
-        </aside>
-
-      <main className="col-span-1 lg:col-span-3 space-y-6">
+    <div className="p-4 md:p-6 max-w-2xl mx-auto">
+      <main className="space-y-6">
         <CreatePost />
         <div className="space-y-6">
             {posts.map((post) => (
