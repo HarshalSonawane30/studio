@@ -90,5 +90,38 @@ export const users: User[] = [
   }
 ];
 
+export const posts = [
+  {
+    id: 'post-1',
+    userId: '2', // Samantha Lee
+    content: `Excited to share the final designs for our new EdTech platform! We focused on creating an intuitive and accessible learning experience. Big thanks to the whole team for their hard work. #UIUX #ProductDesign #EdTech`,
+    imageUrl: placeholderImages.find(p => p.id === 'post-image-1')?.imageUrl || '',
+    imageHint: placeholderImages.find(p => p.id === 'post-image-1')?.imageHint || '',
+    createdAt: '4h ago',
+    likesCount: 128,
+    commentsCount: 12,
+  },
+  {
+    id: 'post-2',
+    userId: '1', // Alex Johnson
+    content: `Just published a new article on advanced state management patterns in Next.js 15! Covering everything from the new useOptimistic hook to integrating with server components. Hope you find it useful! #React #NextJS #WebDev`,
+    imageUrl: '',
+    createdAt: '1d ago',
+    likesCount: 256,
+    commentsCount: 34,
+  },
+  {
+    id: 'post-3',
+    userId: '3', // David Chen
+    content: `Our latest research paper on using LLMs for financial forecasting just got accepted! It's been a long journey, but the results are promising. The potential for AI in this space is massive. #AI #MachineLearning #Fintech`,
+    imageUrl: placeholderImages.find(p => p.id === 'post-image-2')?.imageUrl || '',
+    imageHint: placeholderImages.find(p => p.id === 'post-image-2')?.imageHint || '',
+    createdAt: '2d ago',
+    likesCount: 512,
+    commentsCount: 64,
+  },
+];
+
+
 export const skills = allSkills;
 export const interests = allInterests;

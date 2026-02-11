@@ -41,6 +41,18 @@
       "description": "Portrait of a woman with glasses in a library.",
       "imageUrl": "https://images.unsplash.com/photo-1546728506-b9481415d24d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8d29tYW4lMjBsaWJyYXJ5fGVufDB8fHx8MTc3MDY4NjI5NXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "woman library"
+    },
+    {
+      "id": "post-image-1",
+      "description": "A user interface design mockup on a computer screen.",
+      "imageUrl": "https://images.unsplash.com/photo-1600132806370-bf17e65e9252?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxVSVUX2Rlc2lnbnxlbnwwfHx8fDE3NzA3ODc4ODB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "UI design"
+    },
+    {
+      "id": "post-image-2",
+      "description": "A graph showing financial data on a screen.",
+      "imageUrl": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmaW5hbmNpYWwlMjBmb3JlY2FzdGluZ3xlbnwwfHx8fDE3NzA3ODc5MjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "financial forecast"
     }
   ]
 }
