@@ -8,33 +8,59 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { BarChart, Users, FileText, ClipboardList } from 'lucide-react';
+import {
+  BarChart,
+  FileText,
+  Flag,
+  LayoutDashboard,
+  Server,
+  TrendingUp,
+  Users,
+} from 'lucide-react';
 import Link from 'next/link';
 
 const adminWidgets = [
   {
-    title: 'User Management',
-    description: 'View and manage platform users.',
+    title: 'Overview',
+    description: 'Key metrics and platform health.',
+    icon: <LayoutDashboard />,
+    href: '/admin',
+  },
+  {
+    title: 'Users',
+    description: 'Manage and search for users.',
     icon: <Users />,
     href: '/admin/users',
   },
   {
-    title: 'Skills & Assessments',
-    description: 'Add or edit skills and assessments.',
-    icon: <ClipboardList />,
-    href: '/admin/skills',
-  },
-  {
-    title: 'Content Moderation',
-    description: 'Review and moderate reported content.',
+    title: 'Content',
+    description: 'Moderate posts and comments.',
     icon: <FileText />,
     href: '/admin/content',
   },
   {
-    title: 'Platform Analytics',
-    description: 'Analyze user engagement and growth metrics.',
+    title: 'Analytics',
+    description: 'Deep dive into platform analytics.',
     icon: <BarChart />,
     href: '/admin/analytics',
+  },
+  {
+    title: 'Engagement',
+    description: 'Track user interaction metrics.',
+    icon: <TrendingUp />,
+    href: '/admin/engagement',
+  },
+  {
+    title: 'Reports',
+    description: 'Review user-submitted reports.',
+    icon: <Flag />,
+    href: '/admin/reports',
+  },
+  {
+    title: 'System Health',
+    description: 'Monitor API and server status.',
+    icon: <Server />,
+    href: '/admin/system',
   },
 ];
 
@@ -42,9 +68,9 @@ export default function AdminDashboard() {
   return (
     <div className="container mx-auto p-0">
       <header className="mb-6">
-        <h1 className="font-headline text-3xl font-bold">Admin Dashboard</h1>
+        <h1 className="font-headline text-3xl font-bold">Admin Overview</h1>
         <p className="text-muted-foreground">
-          Welcome, Admin. Here's an overview of the platform.
+          Welcome, Admin. Here's a high-level overview of the platform.
         </p>
       </header>
 
@@ -63,9 +89,9 @@ export default function AdminDashboard() {
               </div>
             </CardHeader>
             <CardContent>
-               <Button asChild variant="outline">
-                  <Link href={widget.href}>Manage</Link>
-                </Button>
+              <Button asChild variant="outline">
+                <Link href={widget.href}>Manage</Link>
+              </Button>
             </CardContent>
           </Card>
         ))}
