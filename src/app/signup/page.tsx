@@ -61,6 +61,8 @@ export default function SignupPage() {
             bio: '',
             skills: [],
             interests: [],
+            isDeleted: false,
+            reputationScore: 0,
         });
       }
       toast({
@@ -110,6 +112,8 @@ export default function SignupPage() {
             bio: '',
             skills: [],
             interests: [],
+            isDeleted: false,
+            reputationScore: 0,
         });
       }
 

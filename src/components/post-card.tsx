@@ -1,18 +1,47 @@
 'use client';
+import { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Heart, MessageCircle, Share2, MoreHorizontal } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
-import { users } from "@/lib/data";
-import { useAuth, useFirestore } from "@/firebase";
+import { useAuth, useFirestore, useDoc } from "@/firebase";
 import { trackEvent } from "@/lib/analytics";
+import { formatDistanceToNow } from 'date-fns';
 
-export const PostCard = ({ post }: { post: any }) => {
-  const user = users.find(u => u.id === post.userId);
+type Post = {
+  id: string;
+  content: string;
+  createdAt: { seconds: number, nanoseconds: number };
+  imageUrl?: string;
+  imageHint?: string;
+  likesCount: number;
+  commentsCount: number;
+  userId: string;
+  embeddedUser: string;
+};
+
+type EmbeddedUser = {
+  uid: string;
+  displayName: string;
+  photoURL?: string;
+};
+
+export const PostCard = ({ post }: { post: Post }) => {
   const firestore = useFirestore();
   const auth = useAuth();
+  const user: EmbeddedUser = useMemo(() => {
+    try {
+      return JSON.parse(post.embeddedUser);
+    } catch (e) {
+      console.error("Failed to parse embeddedUser", e);
+      return { uid: post.userId, displayName: "Unknown User" };
+    }
+  }, [post.embeddedUser, post.userId]);
+  
+  // This is a placeholder for fetching author's title.
+  // In a real app, this might be part of the embeddedUser object.
+  const { data: authorProfile } = useDoc<any>(`users/${user.uid}`);
 
   const handleLike = () => {
     if (!firestore || !auth) {
@@ -22,21 +51,21 @@ export const PostCard = ({ post }: { post: any }) => {
     trackEvent(firestore, auth, 'post_like', { postId: post.id, authorId: post.userId });
   };
 
-  if (!user) {
-    return null;
-  }
+  const formattedDate = post.createdAt
+    ? formatDistanceToNow(new Date(post.createdAt.seconds * 1000), { addSuffix: true })
+    : 'Just now';
 
   return (
     <Card className="overflow-hidden">
       <CardHeader className="flex flex-row items-center gap-4">
         <Avatar>
-          <AvatarImage src={user.avatarUrl} alt={user.name} />
-          <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+          <AvatarImage src={user.photoURL} alt={user.displayName} />
+          <AvatarFallback>{user.displayName?.charAt(0) || 'U'}</AvatarFallback>
         </Avatar>
         <div className="flex-1">
-          <Link href={`/profile/${user.id}`} className="font-semibold hover:underline">{user.name}</Link>
-          <p className="text-sm text-muted-foreground">{user.title}</p>
-          <p className="text-xs text-muted-foreground">{post.createdAt}</p>
+          <p className="font-semibold hover:underline cursor-pointer">{user.displayName}</p>
+          <p className="text-sm text-muted-foreground">{authorProfile?.title || 'Community Member'}</p>
+          <p className="text-xs text-muted-foreground">{formattedDate}</p>
         </div>
         <Button variant="ghost" size="icon">
           <MoreHorizontal />

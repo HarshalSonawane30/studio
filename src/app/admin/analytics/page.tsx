@@ -1,10 +1,11 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { BarChart, LineChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar, Line } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { useCollection } from '@/firebase';
+import { useCollection, useFirestore } from '@/firebase';
 import { format, parseISO } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
+import { collection } from 'firebase/firestore';
 
 // Type definition for the analytics events coming from Firestore
 type AnalyticsEvent = {
@@ -18,8 +19,14 @@ type AnalyticsEvent = {
 };
 
 export default function AdminAnalyticsPage() {
+  const firestore = useFirestore();
+  const eventsQuery = useMemo(() => {
+    if (!firestore) return null;
+    return collection(firestore, 'analyticsEvents');
+  }, [firestore]);
+
   // Use the real-time collection hook to get live analytics events
-  const { data: events, loading } = useCollection<AnalyticsEvent>('analyticsEvents');
+  const { data: events, loading } = useCollection<AnalyticsEvent>(eventsQuery);
 
   const [userGrowthData, setUserGrowthData] = useState<any[]>([]);
   const [engagementData, setEngagementData] = useState<any[]>([]);

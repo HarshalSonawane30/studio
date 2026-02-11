@@ -1,21 +1,23 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { collection, onSnapshot, Query, DocumentData, FirestoreError } from 'firebase/firestore';
-import { useFirestore } from '../provider';
+import { onSnapshot, Query, DocumentData, FirestoreError } from 'firebase/firestore';
 
-export function useCollection<T>(path: string) {
-  const db = useFirestore();
+export function useCollection<T>(query: Query<DocumentData> | null) {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<FirestoreError | null>(null);
 
   useEffect(() => {
-    if (!db) return;
+    // Only run if the query is not null
+    if (!query) {
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
 
-    const collectionRef = collection(db, path);
     const unsubscribe = onSnapshot(
-      collectionRef as Query<T>,
+      query as Query<T>,
       (snapshot) => {
         const data: T[] = snapshot.docs.map((doc) => ({
           ...doc.data(),
@@ -25,13 +27,14 @@ export function useCollection<T>(path: string) {
         setLoading(false);
       },
       (err) => {
+        console.error("useCollection error: ", err);
         setError(err);
         setLoading(false);
       }
     );
 
     return () => unsubscribe();
-  }, [db, path]);
+  }, [query]);
 
   return { data, loading, error };
 }

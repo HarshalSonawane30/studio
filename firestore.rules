@@ -23,6 +23,8 @@ service cloud.firestore {
     }
 
     function isAdmin() {
+      // In a production app, this would check a custom claim.
+      // For this prototype, we check a 'role' field on the user document.
       return isSignedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
@@ -32,6 +34,7 @@ service cloud.firestore {
     // Users can only create and update their own profile.
     match /users/{userId} {
       allow get: if isSignedIn();
+      allow list: if isAdmin();
       allow create, update: if isOwner(userId);
       
       // Sub-collections inherit owner-only rules
@@ -64,17 +67,19 @@ service cloud.firestore {
       allow update: if isSignedIn() && (request.auth.uid == resource.data.senderId || request.auth.uid == resource.data.receiverId);
     }
     
-    // Posts can be read by anyone, but only created/modified by the author.
+    // Posts can be read by anyone, but only created/modified by the author or an admin.
     match /posts/{postId} {
       allow get, list: if isSignedIn();
       allow create: if isSignedIn() && request.auth.uid == request.resource.data.userId;
-      allow update, delete: if isSignedIn() && request.auth.uid == resource.data.userId;
+      allow update: if isSignedIn() && request.auth.uid == resource.data.userId;
+      allow delete: if (isSignedIn() && request.auth.uid == resource.data.userId) || isAdmin();
 
       // Comments have similar rules.
       match /comments/{commentId} {
         allow get, list: if isSignedIn();
         allow create: if isSignedIn() && request.auth.uid == request.resource.data.userId;
-        allow update, delete: if isSignedIn() && request.auth.uid == resource.data.userId;
+        allow update: if isSignedIn() && request.auth.uid == resource.data.userId;
+        allow delete: if (isSignedIn() && request.auth.uid == resource.data.userId) || isAdmin();
       }
     }
 
@@ -99,9 +104,7 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
     match /analyticsEvents/{eventId} {
-      allow create: if isSignedIn();
+      allow read, list, create: if isSignedIn();
     }
   }
 }
-
-    

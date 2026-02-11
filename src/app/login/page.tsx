@@ -93,6 +93,8 @@ export default function LoginPage() {
             bio: '',
             skills: [],
             interests: [],
+            isDeleted: false,
+            reputationScore: 0,
         });
       }
       
