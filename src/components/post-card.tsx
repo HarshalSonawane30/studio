@@ -39,8 +39,6 @@ export const PostCard = ({ post }: { post: Post }) => {
     }
   }, [post.embeddedUser, post.userId]);
   
-  // This is a placeholder for fetching author's title.
-  // In a real app, this might be part of the embeddedUser object.
   const { data: authorProfile } = useDoc<any>(`users/${user.uid}`);
 
   const handleLike = () => {
@@ -56,7 +54,7 @@ export const PostCard = ({ post }: { post: Post }) => {
     : 'Just now';
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden transition-all hover:shadow-lg">
       <CardHeader className="flex flex-row items-center gap-4">
         <Avatar>
           <AvatarImage src={user.photoURL} alt={user.displayName} />
@@ -74,7 +72,7 @@ export const PostCard = ({ post }: { post: Post }) => {
       <CardContent>
         <p className="mb-4 whitespace-pre-wrap">{post.content}</p>
         {post.imageUrl && (
-          <div className="relative aspect-video w-full overflow-hidden rounded-lg">
+          <div className="relative aspect-square w-full overflow-hidden rounded-lg">
             <Image
                 src={post.imageUrl}
                 alt="Post image"

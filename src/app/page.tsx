@@ -43,7 +43,7 @@ function CardSkeleton() {
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-4 w-[90%]" />
       </div>
-      <Skeleton className="h-48 w-full" />
+      <Skeleton className="aspect-square h-auto w-full" />
     </div>
   )
 }
@@ -58,7 +58,7 @@ export default function HomePage() {
   const { data: posts, loading } = useCollection<Post>(postsQuery);
 
   return (
-    <div className="mx-auto max-w-2xl p-4 md:p-6">
+    <div className="mx-auto max-w-3xl p-4 md:p-6">
       <main className="space-y-6">
         <CreatePost />
         {loading ? (
