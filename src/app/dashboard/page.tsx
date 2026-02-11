@@ -8,11 +8,11 @@ import {
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { users } from '@/lib/data';
-import { Analytics, BookOpen, Calendar, MessageSquare, Briefcase } from 'lucide-react';
+import { BarChart, BookOpen, Calendar, MessageSquare, Briefcase } from 'lucide-react';
 
 const widgets = [
     { title: "Upcoming Sessions", description: "View your scheduled learning and teaching sessions.", icon: <Calendar/>, href:"/dashboard/sessions" },
-    { title: "Skill Progress", description: "Track your analytics and progress on assessments.", icon: <Analytics/>, href:"/dashboard/progress" },
+    { title: "Skill Progress", description: "Track your analytics and progress on assessments.", icon: <BarChart/>, href:"/dashboard/progress" },
     { title: "Saved Posts", description: "Revisit articles and resources you've saved.", icon: <BookOpen/>, href:"/dashboard/saved" },
     { title: "Inbox", description: "Manage your conversations and messages.", icon: <MessageSquare/>, href:"/chat" },
     { title: "My Skills", description: "Manage your skills and take new assessments.", icon: <Briefcase/>, href:"/assessments" },
