@@ -33,10 +33,6 @@ export default function LoginForm({ onLoginSuccess }: LoginFormProps) {
     setTimeout(() => {
       if (id === 'Harshal04' && password === 'H@rshal04') {
         onLoginSuccess();
-        toast({
-          title: 'Login Successful',
-          description: 'Welcome to the Admin Panel.',
-        });
       } else {
         toast({
           variant: 'destructive',
