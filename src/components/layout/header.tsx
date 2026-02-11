@@ -16,9 +16,10 @@ import Link from 'next/link';
 import { useAuth, useUser } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
+import { Skeleton } from '../ui/skeleton';
 
 export function MainHeader() {
-  const user = useUser();
+  const { user, loading } = useUser();
   const auth = useAuth();
   const router = useRouter();
 
@@ -28,6 +29,16 @@ export function MainHeader() {
       router.push('/login');
     }
   };
+
+  if (loading) {
+    return (
+      <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+        <SidebarTrigger className="sm:hidden" />
+        <div className="flex-1" />
+        <Skeleton className="h-8 w-8 rounded-full" />
+      </header>
+    );
+  }
 
   return (
     <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">

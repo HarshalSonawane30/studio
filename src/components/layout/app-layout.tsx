@@ -2,6 +2,7 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import {
   SidebarProvider,
   Sidebar,
@@ -34,31 +35,36 @@ const navItems = [
 ];
 
 function AuthGatedLayout({ children }: { children: ReactNode }) {
-  const user = useUser();
+  const { user, loading } = useUser();
   const router = useRouter();
   const pathname = usePathname();
 
   const publicRoutes = ['/login', '/signup'];
+  const isPublicRoute = publicRoutes.includes(pathname);
+  const isAuthenticated = !!user;
 
-  if (!user && !publicRoutes.includes(pathname)) {
-    if (typeof window !== 'undefined') {
-        router.push('/login');
+  useEffect(() => {
+    if (loading) return; // Wait for auth state
+
+    if (!isAuthenticated && !isPublicRoute) {
+      router.push('/login');
     }
-    return null; 
-  }
-  
-  if (user && publicRoutes.includes(pathname)) {
-     if (typeof window !== 'undefined') {
-        router.push('/');
+    if (isAuthenticated && isPublicRoute) {
+      router.push('/');
     }
-    return null;
+  }, [isAuthenticated, isPublicRoute, loading, router]);
+
+  // While loading, or if a redirect is imminent, show nothing to prevent flicker.
+  if (loading || (!isAuthenticated && !isPublicRoute) || (isAuthenticated && isPublicRoute)) {
+    return null; // Or a global loader
   }
 
-  if (publicRoutes.includes(pathname)) {
+  // If it's a public route, it means user is not authenticated. Render page without layout.
+  if (isPublicRoute) {
     return <>{children}</>;
   }
 
-
+  // If we reach here, user is authenticated and on a private route. Render the full layout.
   return (
     <SidebarProvider>
       <Sidebar side="left" variant="sidebar" collapsible="icon">
