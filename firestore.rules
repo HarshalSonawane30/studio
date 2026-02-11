@@ -1,0 +1,107 @@
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Deny all reads and writes by default.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper Functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isParticipant(conversationId) {
+      return isSignedIn() && request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.participants;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // --- COLLECTION RULES ---
+
+    // Users can read their own profile, and any signed-in user can view public profiles.
+    // Users can only create and update their own profile.
+    match /users/{userId} {
+      allow get: if isSignedIn();
+      allow create, update: if isOwner(userId);
+      
+      // Sub-collections inherit owner-only rules
+      match /skillResults/{skillResultId} {
+        allow read, write: if isOwner(userId);
+      }
+      match /certificates/{certificateId} {
+        allow read, write: if isOwner(userId);
+      }
+      match /timeSlots/{timeSlotId} {
+        allow read, write: if isOwner(userId);
+      }
+      match /unreadCounts/{conversationId} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    // Public, read-only collections
+    match /skills/{skillId} {
+      allow get, list: if isSignedIn();
+    }
+    match /skillTests/{skillTestId} {
+      allow get, list: if isSignedIn();
+    }
+
+    // Connections can be read by either participant.
+    match /connections/{connectionId} {
+      allow read: if isSignedIn() && (request.auth.uid == resource.data.senderId || request.auth.uid == resource.data.receiverId);
+      allow create: if isSignedIn() && request.auth.uid == request.resource.data.senderId;
+      allow update: if isSignedIn() && (request.auth.uid == resource.data.senderId || request.auth.uid == resource.data.receiverId);
+    }
+    
+    // Posts can be read by anyone, but only created/modified by the author.
+    match /posts/{postId} {
+      allow get, list: if isSignedIn();
+      allow create: if isSignedIn() && request.auth.uid == request.resource.data.userId;
+      allow update, delete: if isSignedIn() && request.auth.uid == resource.data.userId;
+
+      // Comments have similar rules.
+      match /comments/{commentId} {
+        allow get, list: if isSignedIn();
+        allow create: if isSignedIn() && request.auth.uid == request.resource.data.userId;
+        allow update, delete: if isSignedIn() && request.auth.uid == resource.data.userId;
+      }
+    }
+
+    // Teaching sessions can be read or modified by participants.
+    match /teachingSessions/{sessionId} {
+      allow read, update: if isSignedIn() && (request.auth.uid == resource.data.teacherId || request.auth.uid == resource.data.learnerId);
+      allow create: if isSignedIn() && (request.auth.uid == request.resource.data.teacherId || request.auth.uid == request.resource.data.learnerId);
+    }
+
+    // Conversations and messages can only be accessed by participants.
+    match /conversations/{conversationId} {
+      allow get, update: if isParticipant(conversationId);
+      allow create: if isSignedIn() && request.auth.uid in request.resource.data.participants;
+
+      match /messages/{messageId} {
+        allow read, create: if isParticipant(conversationId);
+      }
+    }
+
+    // Admin-only collections
+    match /adminLogs/{logId} {
+      allow read, write: if isAdmin();
+    }
+    match /analyticsEvents/{eventId} {
+      allow create: if isSignedIn();
+    }
+  }
+}
+
+    

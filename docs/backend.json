@@ -1,0 +1,240 @@
+
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Represents a user of the platform.",
+      "type": "object",
+      "properties": {
+        "username": { "type": "string", "description": "Unique username." },
+        "email": { "type": "string", "format": "email", "description": "User's email address." },
+        "role": { "type": "string", "description": "User role (e.g., learner, teacher, both, admin)." },
+        "displayName": { "type": "string", "description": "Public display name." },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "profilePictureUrl": { "type": "string", "format": "uri" },
+        "bio": { "type": "string" },
+        "reputationScore": { "type": "number" },
+        "isDeleted": { "type": "boolean", "default": false },
+        "lastLoginAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["username", "email", "role", "displayName", "createdAt", "updatedAt"]
+    },
+    "Skill": {
+      "title": "Skill",
+      "description": "Represents a teachable or learnable skill.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "category": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["name", "description", "createdAt", "updatedAt"]
+    },
+    "SkillTest": {
+      "title": "Skill Test",
+      "type": "object",
+      "properties": {
+        "skillId": { "type": "string" },
+        "version": { "type": "string" },
+        "title": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "questions": { "type": "string", "description": "JSON string of questions" },
+        "passScore": { "type": "number" }
+      },
+      "required": ["skillId", "version", "title", "createdAt", "updatedAt", "questions", "passScore"]
+    },
+    "SkillResult": {
+      "title": "Skill Result",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "skillTestId": { "type": "string" },
+        "score": { "type": "number" },
+        "passed": { "type": "boolean" },
+        "attemptedAt": { "type": "string", "format": "date-time" },
+        "answers": { "type": "string", "description": "JSON string of answers" },
+        "feedback": { "type": "string" }
+      },
+      "required": ["userId", "skillTestId", "score", "passed", "attemptedAt"]
+    },
+    "Certificate": {
+      "title": "Certificate",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "skillId": { "type": "string" },
+        "issueDate": { "type": "string", "format": "date-time" },
+        "verificationCode": { "type": "string" },
+        "skillTestId": { "type": "string" },
+        "expirationDate": { "type": "string", "format": "date" }
+      },
+      "required": ["userId", "skillId", "issueDate", "verificationCode"]
+    },
+    "Connection": {
+      "title": "Connection",
+      "type": "object",
+      "properties": {
+        "senderId": { "type": "string" },
+        "receiverId": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "accepted", "rejected"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["senderId", "receiverId", "status", "createdAt", "updatedAt"]
+    },
+    "Post": {
+      "title": "Post",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "imageUrl": { "type": "string", "format": "uri" },
+        "videoUrl": { "type": "string", "format": "uri" },
+        "likesCount": { "type": "number", "default": 0 },
+        "commentsCount": { "type": "number", "default": 0 },
+        "isPublic": { "type": "boolean", "default": true },
+        "embeddedUser": { "type": "string", "description": "JSON string for denormalized user info" }
+      },
+      "required": ["userId", "content", "createdAt", "updatedAt"]
+    },
+    "Comment": {
+      "title": "Comment",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "postId": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "likesCount": { "type": "number", "default": 0 },
+        "embeddedUser": { "type": "string", "description": "JSON string for denormalized user info" }
+      },
+      "required": ["userId", "postId", "content", "createdAt", "updatedAt"]
+    },
+    "TimeSlot": {
+      "title": "Time Slot",
+      "type": "object",
+      "properties": {
+        "teacherId": { "type": "string" },
+        "startTime": { "type": "string", "format": "date-time" },
+        "endTime": { "type": "string", "format": "date-time" },
+        "isBooked": { "type": "boolean", "default": false },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "skillId": { "type": "string" }
+      },
+      "required": ["teacherId", "startTime", "endTime", "isBooked", "createdAt", "updatedAt"]
+    },
+    "TeachingSession": {
+      "title": "Teaching Session",
+      "type": "object",
+      "properties": {
+        "teacherId": { "type": "string" },
+        "learnerId": { "type": "string" },
+        "timeSlotId": { "type": "string" },
+        "skillId": { "type": "string" },
+        "sessionStartTime": { "type": "string", "format": "date-time" },
+        "sessionEndTime": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["scheduled", "completed", "cancelled"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "meetingLink": { "type": "string", "format": "uri" },
+        "notes": { "type": "string" },
+        "rating": { "type": "number" }
+      },
+      "required": ["teacherId", "learnerId", "timeSlotId", "skillId", "sessionStartTime", "sessionEndTime", "status", "createdAt", "updatedAt"]
+    },
+    "Conversation": {
+      "title": "Conversation",
+      "type": "object",
+      "properties": {
+        "participants": { "type": "array", "items": { "type": "string" } },
+        "type": { "type": "string", "enum": ["private", "group"] },
+        "lastMessageAt": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "name": { "type": "string" },
+        "lastMessageSnippet": { "type": "string" }
+      },
+      "required": ["participants", "type", "lastMessageAt", "createdAt", "updatedAt"]
+    },
+    "Message": {
+      "title": "Message",
+      "type": "object",
+      "properties": {
+        "conversationId": { "type": "string" },
+        "senderId": { "type": "string" },
+        "content": { "type": "string" },
+        "sentAt": { "type": "string", "format": "date-time" },
+        "isReadBy": { "type": "array", "items": { "type": "string" } },
+        "attachments": { "type": "array", "items": { "type": "string", "format": "uri" } }
+      },
+      "required": ["conversationId", "senderId", "content", "sentAt"]
+    },
+    "AdminLog": {
+      "title": "Admin Log",
+      "type": "object",
+      "properties": {
+        "adminId": { "type": "string" },
+        "actionType": { "type": "string" },
+        "targetEntity": { "type": "string" },
+        "targetEntityId": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "details": { "type": "string" }
+      },
+      "required": ["adminId", "actionType", "targetEntity", "targetEntityId", "timestamp"]
+    },
+    "AnalyticsEvent": {
+      "title": "Analytics Event",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "eventType": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "eventData": { "type": "string" },
+        "sessionId": { "type": "string" }
+      },
+      "required": ["userId", "eventType", "timestamp"]
+    },
+    "UnreadMessageCount": {
+      "title": "Unread Message Count",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "conversationId": { "type": "string" },
+        "count": { "type": "number" },
+        "lastReadMessageId": { "type": "string" }
+      },
+      "required": ["userId", "conversationId", "count"]
+    }
+  },
+  "auth": {
+    "providers": ["email", "google.com"]
+  },
+  "firestore": {
+    "/users/{userId}": { "schema": { "$ref": "#/entities/User" }, "description": "Stores user profile information." },
+    "/skills/{skillId}": { "schema": { "$ref": "#/entities/Skill" }, "description": "Global list of all skills." },
+    "/skillTests/{skillTestId}": { "schema": { "$ref": "#/entities/SkillTest" }, "description": "All available skill tests." },
+    "/users/{userId}/skillResults/{skillResultId}": { "schema": { "$ref": "#/entities/SkillResult" }, "description": "Results of skill tests taken by a user." },
+    "/users/{userId}/certificates/{certificateId}": { "schema": { "$ref": "#/entities/Certificate" }, "description": "Certificates earned by a user." },
+    "/connections/{connectionId}": { "schema": { "$ref": "#/entities/Connection" }, "description": "Represents connections between two users." },
+    "/posts/{postId}": { "schema": { "$ref": "#/entities/Post" }, "description": "All posts created by users." },
+    "/posts/{postId}/comments/{commentId}": { "schema": { "$ref": "#/entities/Comment" }, "description": "Comments on a specific post." },
+    "/users/{userId}/timeSlots/{timeSlotId}": { "schema": { "$ref": "#/entities/TimeSlot" }, "description": "Available teaching time slots for a user." },
+    "/teachingSessions/{sessionId}": { "schema": { "$ref": "#/entities/TeachingSession" }, "description": "Scheduled teaching sessions between users." },
+    "/conversations/{conversationId}": { "schema": { "$ref": "#/entities/Conversation" }, "description": "Metadata for a chat conversation." },
+    "/conversations/{conversationId}/messages/{messageId}": { "schema": { "$ref": "#/entities/Message" }, "description": "Messages within a conversation." },
+    "/adminLogs/{logId}": { "schema": { "$ref": "#/entities/AdminLog" }, "description": "Logs of actions performed by administrators." },
+    "/analyticsEvents/{eventId}": { "schema": { "$ref": "#/entities/AnalyticsEvent" }, "description": "Events for analytics." },
+    "/users/{userId}/unreadCounts/{conversationId}": { "schema": { "$ref": "#/entities/UnreadMessageCount" }, "description": "Tracks unread messages for a user in a conversation." }
+  }
+}
+
+    
