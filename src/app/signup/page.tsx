@@ -135,13 +135,13 @@ export default function SignupPage() {
             <Logo />
             <div className="space-y-4">
                 <Rocket className="w-12 h-12" />
-                <h1 className="font-headline text-4xl font-bold">Join Emergent Today</h1>
+                <h1 className="font-headline text-4xl font-bold">Join L2L Today</h1>
                 <p className="text-lg text-muted-foreground">
-                    Create an account to start your journey. Connect, learn, and grow with a community of passionate builders.
+                    Learn and Let Learn. Create an account to start your journey. Connect, learn, and grow with a community of passionate builders.
                 </p>
             </div>
             <footer className="text-sm">
-                © {new Date().getFullYear()} Emergent. All rights reserved.
+                © {new Date().getFullYear()} L2L. All rights reserved.
             </footer>
         </div>
 

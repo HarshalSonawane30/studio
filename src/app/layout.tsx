@@ -5,8 +5,8 @@ import { FirebaseClientProvider } from '@/firebase';
 
 
 export const metadata: Metadata = {
-  title: 'Emergent Platform',
-  description: 'Your launchpad for ambitious apps.',
+  title: 'L2L | Learn and Let Learn',
+  description: 'A social learning platform.',
 };
 
 export default function RootLayout({

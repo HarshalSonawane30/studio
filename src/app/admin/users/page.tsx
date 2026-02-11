@@ -60,7 +60,7 @@ export default function AdminUsersPage() {
                     {user.id === '1' ? 'Admin' : 'Learner'}
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
-                    {user.name.toLowerCase().replace(' ', '.')}@emergent.com
+                    {user.name.toLowerCase().replace(' ', '.')}@l2l.com
                   </TableCell>
                   <TableCell>
                     <Badge variant="secondary">Active</Badge>

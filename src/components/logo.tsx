@@ -8,7 +8,7 @@ export default function Logo() {
         <Rocket className="size-5" />
       </div>
       <span className="font-headline text-lg font-semibold">
-        Emergent
+        L2L
       </span>
     </Link>
   );
