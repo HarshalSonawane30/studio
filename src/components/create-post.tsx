@@ -6,21 +6,22 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Image as ImageIcon, Video, Send } from "lucide-react";
-import { useUser, useAuth, useFirestore } from "@/firebase";
+import { useUser, useFirestore, useDoc } from "@/firebase";
 import { Skeleton } from "./ui/skeleton";
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
 export const CreatePost = () => {
     const { user: authUser, loading: userLoading } = useUser();
-    const { data: userProfile, loading: profileLoading } = useDoc<any>(`users/${authUser?.uid}`);
+    const userProfilePath = authUser ? `users/${authUser.uid}` : undefined;
+    const { data: userProfile, loading: profileLoading } = useDoc<any>(userProfilePath);
     const firestore = useFirestore();
     const { toast } = useToast();
     
     const [content, setContent] = useState('');
     const [isPosting, setIsPosting] = useState(false);
 
-    const isLoading = userLoading || profileLoading;
+    const isLoading = userLoading || (authUser && profileLoading);
 
     const handlePost = async () => {
         if (!firestore || !authUser || !userProfile) return;

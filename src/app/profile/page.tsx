@@ -70,7 +70,7 @@ function ProfileSkeleton() {
 export default function ProfilePage() {
   const { user: authUser, loading: authLoading } = useUser();
   const userPath = authUser ? `users/${authUser.uid}` : undefined;
-  const { data: userProfile, loading: profileLoading } = useDoc<UserProfileData>(userPath as string);
+  const { data: userProfile, loading: profileLoading } = useDoc<UserProfileData>(userPath);
 
   const isLoading = authLoading || (userPath && profileLoading);
 
