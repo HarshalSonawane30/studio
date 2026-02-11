@@ -23,10 +23,15 @@ export default function DiscoverPage() {
   const [interestFilter, setInterestFilter] = useState('all');
 
   const filteredUsers = users.filter((user) => {
-    const nameMatch = user.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const term = searchTerm.toLowerCase();
+    const searchMatch =
+      user.name.toLowerCase().includes(term) ||
+      user.skills.some((skill) => skill.toLowerCase().includes(term));
+    
     const skillMatch = skillFilter === 'all' ? true : user.skills.includes(skillFilter);
     const interestMatch = interestFilter === 'all' ? true : user.interests.includes(interestFilter);
-    return nameMatch && skillMatch && interestMatch;
+    
+    return searchMatch && skillMatch && interestMatch;
   });
 
   return (
@@ -38,7 +43,7 @@ export default function DiscoverPage() {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Search by name..."
+              placeholder="Search by name or skill..."
               className="pl-10"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -75,7 +80,7 @@ export default function DiscoverPage() {
         {filteredUsers.length === 0 && (
           <div className="flex h-64 flex-col items-center justify-center rounded-lg border-2 border-dashed">
             <p className="text-lg font-medium text-muted-foreground">No users found.</p>
-            <p className="text-sm text-muted-foreground">Try adjusting your filters.</p>
+            <p className="text-sm text-muted-foreground">Try adjusting your search or filters.</p>
           </div>
         )}
       </main>
