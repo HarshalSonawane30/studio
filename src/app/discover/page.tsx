@@ -19,13 +19,13 @@ import {
 
 export default function DiscoverPage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [skillFilter, setSkillFilter] = useState('');
-  const [interestFilter, setInterestFilter] = useState('');
+  const [skillFilter, setSkillFilter] = useState('all');
+  const [interestFilter, setInterestFilter] = useState('all');
 
   const filteredUsers = users.filter((user) => {
     const nameMatch = user.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const skillMatch = skillFilter ? user.skills.includes(skillFilter) : true;
-    const interestMatch = interestFilter ? user.interests.includes(interestFilter) : true;
+    const skillMatch = skillFilter === 'all' ? true : user.skills.includes(skillFilter);
+    const interestMatch = interestFilter === 'all' ? true : user.interests.includes(interestFilter);
     return nameMatch && skillMatch && interestMatch;
   });
 
@@ -45,7 +45,7 @@ export default function DiscoverPage() {
             />
           </div>
           <div className="flex flex-1 gap-4 md:flex-initial">
-             <Select value={skillFilter} onValueChange={(value) => setSkillFilter(value === 'all' ? '' : value)}>
+             <Select value={skillFilter} onValueChange={(value) => setSkillFilter(value)}>
               <SelectTrigger className="w-full md:w-[180px]">
                 <SelectValue placeholder="Filter by skill" />
               </SelectTrigger>
@@ -54,7 +54,7 @@ export default function DiscoverPage() {
                 {allSkills.map(skill => <SelectItem key={skill} value={skill}>{skill}</SelectItem>)}
               </SelectContent>
             </Select>
-            <Select value={interestFilter} onValueChange={(value) => setInterestFilter(value === 'all' ? '' : value)}>
+            <Select value={interestFilter} onValueChange={(value) => setInterestFilter(value)}>
               <SelectTrigger className="w-full md:w-[180px]">
                 <SelectValue placeholder="Filter by interest" />
               </SelectTrigger>
