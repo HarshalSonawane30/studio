@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -61,6 +61,35 @@ export default function SignupPage() {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    if (!auth) {
+      toast({
+        variant: 'destructive',
+        title: 'Signup Failed',
+        description: 'Authentication service is not available.',
+      });
+      return;
+    }
+    setLoading(true);
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      toast({
+        title: 'Signup Successful',
+        description: 'Welcome!',
+      });
+      router.push('/');
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Signup Failed',
+        description: error.message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex min-h-screen w-full flex-col lg:flex-row">
         <div className="lg:w-1/2 bg-secondary flex-col justify-between p-8 text-secondary-foreground hidden lg:flex">
@@ -95,6 +124,7 @@ export default function SignupPage() {
                             required
                             value={name}
                             onChange={(e) => setName(e.target.value)}
+                            disabled={loading}
                         />
                     </div>
                     <div className="space-y-2">
@@ -106,6 +136,7 @@ export default function SignupPage() {
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            disabled={loading}
                         />
                     </div>
                     <div className="space-y-2">
@@ -116,6 +147,7 @@ export default function SignupPage() {
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            disabled={loading}
                         />
                     </div>
                     <Button type="submit" className="w-full" disabled={loading}>
@@ -134,7 +166,7 @@ export default function SignupPage() {
                     </div>
                 </div>
                 
-                 <Button variant="outline" className="w-full">
+                 <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={loading}>
                     <GoogleIcon />
                     Sign up with Google
                 </Button>
