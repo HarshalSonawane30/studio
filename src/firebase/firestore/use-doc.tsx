@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { doc, onSnapshot, DocumentData, FirestoreError } from 'firebase/firestore';
 import { useFirestore } from '../provider';

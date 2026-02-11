@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import Logo from '@/components/logo';
 import { MainHeader } from './header';
-import { FirebaseClientProvider, useUser } from '@/firebase';
+import { useUser } from '@/firebase';
 import { Toaster } from "@/components/ui/toaster";
 
 const navItems = [
@@ -102,9 +102,9 @@ function AuthGatedLayout({ children }: { children: ReactNode }) {
 
 export function AppLayout({ children }: { children: ReactNode }) {
   return (
-    <FirebaseClientProvider>
+    <>
       <AuthGatedLayout>{children}</AuthGatedLayout>
       <Toaster />
-    </FirebaseClientProvider>
+    </>
   )
 }
