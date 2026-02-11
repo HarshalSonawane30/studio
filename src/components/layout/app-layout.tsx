@@ -45,6 +45,12 @@ function AuthGatedLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   const publicRoutes = ['/login', '/signup'];
+  const isAdminRoute = pathname.startsWith('/admin');
+
+  if (isAdminRoute) {
+    return <>{children}</>;
+  }
+
   const isPublicRoute = publicRoutes.includes(pathname);
   const isAuthenticated = !!user;
 
