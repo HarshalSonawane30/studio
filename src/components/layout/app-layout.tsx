@@ -24,6 +24,7 @@ import {
 import Logo from '@/components/logo';
 import { MainHeader } from './header';
 import { FirebaseClientProvider, useUser } from '@/firebase';
+import { Toaster } from "@/components/ui/toaster";
 
 const navItems = [
   { href: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -103,6 +104,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
   return (
     <FirebaseClientProvider>
       <AuthGatedLayout>{children}</AuthGatedLayout>
+      <Toaster />
     </FirebaseClientProvider>
   )
 }
