@@ -1,7 +1,7 @@
 'use client';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   SidebarProvider,
   Sidebar,
@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import Logo from '@/components/logo';
 import { MainHeader } from './header';
+import { FirebaseClientProvider, useUser } from '@/firebase';
 
 const navItems = [
   { href: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -32,8 +33,31 @@ const navItems = [
   { href: '/profile', icon: UserIcon, label: 'Profile' },
 ];
 
-export function AppLayout({ children }: { children: ReactNode }) {
+function AuthGatedLayout({ children }: { children: ReactNode }) {
+  const user = useUser();
+  const router = useRouter();
   const pathname = usePathname();
+
+  const publicRoutes = ['/login', '/signup'];
+
+  if (!user && !publicRoutes.includes(pathname)) {
+    if (typeof window !== 'undefined') {
+        router.push('/login');
+    }
+    return null; 
+  }
+  
+  if (user && publicRoutes.includes(pathname)) {
+     if (typeof window !== 'undefined') {
+        router.push('/');
+    }
+    return null;
+  }
+
+  if (publicRoutes.includes(pathname)) {
+    return <>{children}</>;
+  }
+
 
   return (
     <SidebarProvider>
@@ -66,4 +90,13 @@ export function AppLayout({ children }: { children: ReactNode }) {
       </SidebarInset>
     </SidebarProvider>
   );
+}
+
+
+export function AppLayout({ children }: { children: ReactNode }) {
+  return (
+    <FirebaseClientProvider>
+      <AuthGatedLayout>{children}</AuthGatedLayout>
+    </FirebaseClientProvider>
+  )
 }
