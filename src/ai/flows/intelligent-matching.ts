@@ -18,6 +18,7 @@ const IntelligentMatchingInputSchema = z.object({
     desiredSkills: z.array(z.string()).optional().describe('List of skills the user wants to learn.'),
   }).describe('The profile of the user seeking a match.'),
   otherUserProfiles: z.array(z.object({
+    userId: z.string().describe('Unique identifier of the other user.'),
     skills: z.array(z.string()).describe('List of skills the other user possesses.'),
     interests: z.array(z.string()).describe('List of the other user interests.'),
   })).describe('Profiles of other users to consider for matching.'),
@@ -52,7 +53,7 @@ Desired Skills: {{userProfile.desiredSkills}}
 And the following list of other user profiles:
 
 {{#each otherUserProfiles}}
-User Profile:
+User (ID: {{this.userId}}):
 Skills: {{this.skills}}
 Interests: {{this.interests}}
 {{/each}}
